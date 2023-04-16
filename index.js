@@ -11,26 +11,25 @@ const whitelist = [
   "http://localhost:3000",
   "http://localhost:3000/",
 ];
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (whitelist.indexOf(origin) !== -1 || true) {
-        callback(null, true);
-      } else {
-        callback(new Error(`Not allowed by DANTR`));
-      }
-    },
-    optionsSuccessStatus: 200,
-  })
-);
+const corsOption = {
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1 || true) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Not allowed by DANTR`));
+    }
+  },
+  optionsSuccessStatus: 200,
+};
+app.use(cors());
 const port = 3333;
 const server = http.createServer(app);
 
 const io = new Server(server, {
-  // cors: {
-  //   // origin: "http://localhost:3001/",
-  //   // methods: ["GET", "POST"],
-  // },
+  cors: {
+    origin: "http://localhost:3001",
+    methods: ["GET", "POST"],
+  },
 });
 var Custom = [];
 
@@ -93,6 +92,6 @@ io.on("connection", (socket) => {
 server.listen(port, () => {
   console.log("server is running on port " + port);
 });
-app.get("/", (req, res) => {
-  res.json({ data: "socket server" });
-});
+// app.get("/", (req, res) => {
+//   res.json({ data: "socket server" });
+// });
