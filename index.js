@@ -6,7 +6,18 @@ const http = require("http");
 const { Server } = require("socket.io");
 const cors = require("cors");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (whitelist.indexOf(origin) !== -1 || undefined) {
+        callback(null, true);
+      } else {
+        callback(new Error(`Not allowed by DANTR`));
+      }
+    },
+    optionsSuccessStatus: 200,
+  })
+);
 const port = 3333;
 const server = http.createServer(app);
 
